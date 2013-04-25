@@ -21,8 +21,16 @@ TextLayer text_date_layer;
 TextLayer text_day_layer;
 
 Layer centerLine_layer;
+Layer boundingBoxes_layer;
 
 void handle_second_tick (AppContextRef ctx, PebbleTickEvent *t);
+
+void graphics_draw_rect (GContext* ctx, GRect rect) {
+    graphics_draw_line(ctx, GPoint(rect.origin.x, rect.origin.y), GPoint(rect.origin.x, rect.origin.y + rect.size.h));
+    graphics_draw_line(ctx, GPoint(rect.origin.x, rect.origin.y + rect.size.h), GPoint(rect.origin.x + rect.size.w, rect.origin.y + rect.size.h));
+    graphics_draw_line(ctx, GPoint(rect.origin.x + rect.size.w, rect.origin.y + rect.size.h), GPoint(rect.origin.x + rect.size.w, rect.origin.y));
+    graphics_draw_line(ctx, GPoint(rect.origin.x + rect.size.w, rect.origin.y), GPoint(rect.origin.x, rect.origin.y));
+}
 
 void centerLine_layer_update_callback (Layer *me, GContext* ctx) {
     (void)me;
@@ -76,6 +84,21 @@ void centerLine_layer_update_callback (Layer *me, GContext* ctx) {
     graphics_draw_line(ctx, GPoint(77,98), GPoint(75,98));
 }
 
+void boundingBoxes_layer_update_callback (Layer *me, GContext* ctx) {
+    (void)me;
+    
+    graphics_context_set_stroke_color(ctx, GColorWhite);
+    graphics_context_set_fill_color(ctx, GColorBlack);
+    
+    graphics_draw_rect(ctx, text_hours_layer.layer.frame);
+    graphics_draw_rect(ctx, text_minutes_layer.layer.frame);
+    graphics_draw_rect(ctx, text_seconds_layer.layer.frame);
+    graphics_draw_rect(ctx, text_year_layer.layer.frame);
+    graphics_draw_rect(ctx, text_month_layer.layer.frame);
+    graphics_draw_rect(ctx, text_date_layer.layer.frame);
+    graphics_draw_rect(ctx, text_day_layer.layer.frame);
+}
+
 void handle_init(AppContextRef ctx) {
     window_init(&window, "Side By Side");
     window_stack_push(&window, true /* Animated */);
@@ -83,52 +106,56 @@ void handle_init(AppContextRef ctx) {
     
     resource_init_current_app(&APP_RESOURCES);
     
+    //layer_init(&boundingBoxes_layer, window.layer.frame);
+    //boundingBoxes_layer.update_proc = &boundingBoxes_layer_update_callback;
+    //layer_add_child(&window.layer, &boundingBoxes_layer);
+    
     text_layer_init(&text_hours_layer, window.layer.frame);
     text_layer_set_text_color(&text_hours_layer, GColorWhite);
     text_layer_set_background_color(&text_hours_layer, GColorClear);
-    layer_set_frame(&text_hours_layer.layer, GRect(4, 14, 144-4, 168-18));
+    layer_set_frame(&text_hours_layer.layer, GRect(4, 14, 144-84, 41));
     text_layer_set_font(&text_hours_layer, fonts_load_custom_font(resource_get_handle(RESOURCE_ID_FONT_CST_BLACK_34)));
     layer_add_child(&window.layer, &text_hours_layer.layer);
     
     text_layer_init(&text_minutes_layer, window.layer.frame);
     text_layer_set_text_color(&text_minutes_layer, GColorWhite);
     text_layer_set_background_color(&text_minutes_layer, GColorClear);
-    layer_set_frame(&text_minutes_layer.layer, GRect(4, 59, 144-4, 168-63));
+    layer_set_frame(&text_minutes_layer.layer, GRect(4, 59, 144-84, 41));
     text_layer_set_font(&text_minutes_layer, fonts_load_custom_font(resource_get_handle(RESOURCE_ID_FONT_CST_BLACK_34)));
     layer_add_child(&window.layer, &text_minutes_layer.layer);
     
     text_layer_init(&text_seconds_layer, window.layer.frame);
     text_layer_set_text_color(&text_seconds_layer, GColorWhite);
     text_layer_set_background_color(&text_seconds_layer, GColorClear);
-    layer_set_frame(&text_seconds_layer.layer, GRect(4, 104, 144-4, 168-108));
+    layer_set_frame(&text_seconds_layer.layer, GRect(4, 104, 144-84, 41));
     text_layer_set_font(&text_seconds_layer, fonts_load_custom_font(resource_get_handle(RESOURCE_ID_FONT_CST_BLACK_34)));
     layer_add_child(&window.layer, &text_seconds_layer.layer);
     
     text_layer_init(&text_year_layer, window.layer.frame);
     text_layer_set_text_color(&text_year_layer, GColorWhite);
     text_layer_set_background_color(&text_year_layer, GColorClear);
-    layer_set_frame(&text_year_layer.layer, GRect(78, 8, 144-74, 168-8));
+    layer_set_frame(&text_year_layer.layer, GRect(78, 8, 144-86, 37));
     text_layer_set_font(&text_year_layer, fonts_load_custom_font(resource_get_handle(RESOURCE_ID_FONT_CST_LIGHT_30)));
     layer_add_child(&window.layer, &text_year_layer.layer);
     
     text_layer_init(&text_month_layer, window.layer.frame);
     text_layer_set_text_color(&text_month_layer, GColorWhite);
     text_layer_set_background_color(&text_month_layer, GColorClear);
-    layer_set_frame(&text_month_layer.layer, GRect(78, 50, 144-74, 168-50));
+    layer_set_frame(&text_month_layer.layer, GRect(78, 50, 144-86, 37));
     text_layer_set_font(&text_month_layer, fonts_load_custom_font(resource_get_handle(RESOURCE_ID_FONT_CST_LIGHT_30)));
     layer_add_child(&window.layer, &text_month_layer.layer);
     
     text_layer_init(&text_date_layer, window.layer.frame);
     text_layer_set_text_color(&text_date_layer, GColorWhite);
     text_layer_set_background_color(&text_date_layer, GColorClear);
-    layer_set_frame(&text_date_layer.layer, GRect(78, 92, 144-74, 168-92));
+    layer_set_frame(&text_date_layer.layer, GRect(78, 92, 144-86, 37));
     text_layer_set_font(&text_date_layer, fonts_load_custom_font(resource_get_handle(RESOURCE_ID_FONT_CST_LIGHT_30)));
     layer_add_child(&window.layer, &text_date_layer.layer);
     
     text_layer_init(&text_day_layer, window.layer.frame);
     text_layer_set_text_color(&text_day_layer, GColorWhite);
     text_layer_set_background_color(&text_day_layer, GColorClear);
-    layer_set_frame(&text_day_layer.layer, GRect(78, 134, 144-74, 168-134));
+    layer_set_frame(&text_day_layer.layer, GRect(78, 134, 144-86, 27));
     text_layer_set_font(&text_day_layer, fonts_load_custom_font(resource_get_handle(RESOURCE_ID_FONT_CST_LIGHT_20)));
     layer_add_child(&window.layer, &text_day_layer.layer);
     
@@ -136,7 +163,7 @@ void handle_init(AppContextRef ctx) {
     centerLine_layer.update_proc = &centerLine_layer_update_callback;
     layer_add_child(&window.layer, &centerLine_layer);
     
-    handle_second_tick (ctx, NULL);
+    handle_second_tick (ctx, GCornerNone);
 }
 
 void handle_second_tick (AppContextRef ctx, PebbleTickEvent *t) {
@@ -149,11 +176,11 @@ void handle_second_tick (AppContextRef ctx, PebbleTickEvent *t) {
     static char year_text[] = "00";
     static char month_text[] = "00";
     static char date_text[] = "00";
-    static char day_text[] = "XXX";
+    static char day_text[] = "WED";
     
     PblTm tm;
     
-    if (t == NULL) {
+    if (t == GCornerNone) {
         get_time(&tm);
     } else {
         tm = *(t->tick_time);
