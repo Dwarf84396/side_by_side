@@ -1,0 +1,23 @@
+
+{"friendlyVersion": "VERSION",
+ "versionDefName": "APP_RESOURCES",
+ "media": [
+	{
+	"type": "font",
+	"defName": "FONT_CST_BLACK_34",
+	"file": "fonts/CST-Black.ttf"
+	},
+
+	{
+	"type": "font",
+	"defName": "FONT_CST_LIGHT_30",
+	"file": "fonts/CST-Light.ttf"
+	},
+
+	{
+	"type": "font",
+	"defName": "FONT_CST_LIGHT_20",
+	"file": "fonts/CST-Light.ttf"
+	}
+	  ]
+}
