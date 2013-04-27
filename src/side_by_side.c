@@ -10,6 +10,15 @@ PBL_APP_INFO(MY_UUID,
              DEFAULT_MENU_ICON,
              APP_INFO_WATCH_FACE);
 
+void upcase(char *str)
+{
+    for (int i = 0; str[i] != 0; i++) {
+        if (str[i] >= 'a' && str[i] <= 'z') {
+            str[i] -= 0x20;
+        }
+    }
+}
+
 Window window;
 
 TextLayer text_hours_layer;
@@ -82,6 +91,8 @@ void centerLine_layer_update_callback (Layer *me, GContext* ctx) {
     graphics_draw_line(ctx, GPoint(79,94), GPoint(79,96));
     graphics_draw_line(ctx, GPoint(79,96), GPoint(77,98));
     graphics_draw_line(ctx, GPoint(77,98), GPoint(75,98));
+    
+    
 }
 
 void boundingBoxes_layer_update_callback (Layer *me, GContext* ctx) {
@@ -210,6 +221,7 @@ void handle_second_tick (AppContextRef ctx, PebbleTickEvent *t) {
     text_layer_set_text(&text_date_layer, date_text);
     
     string_format_time(day_text, sizeof(day_text), "%a", &tm);
+    upcase((char*)(&day_text));
     text_layer_set_text(&text_day_layer, day_text);
 }
 
