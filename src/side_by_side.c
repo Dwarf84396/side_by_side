@@ -217,7 +217,7 @@ void handle_second_tick (AppContextRef ctx, PebbleTickEvent *t) {
     string_format_time(month_text, sizeof(month_text), "%m", &tm);
     text_layer_set_text(&text_month_layer, month_text);
     
-    string_format_time(date_text, sizeof(date_text), "%e", &tm);
+    string_format_time(date_text, sizeof(date_text), "%d", &tm);
     text_layer_set_text(&text_date_layer, date_text);
     
     string_format_time(day_text, sizeof(day_text), "%a", &tm);
